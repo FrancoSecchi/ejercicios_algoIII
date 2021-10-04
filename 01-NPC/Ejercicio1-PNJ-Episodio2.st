@@ -1,3 +1,111 @@
+!classDefinition: #CarolinaLaCuranderaDeRiverwood category: 'Ejercicio1-PNJ-Episodio2'!
+DenotativeObject subclass: #CarolinaLaCuranderaDeRiverwood
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Ejercicio1-PNJ-Episodio2'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'CarolinaLaCuranderaDeRiverwood class' category: 'Ejercicio1-PNJ-Episodio2'!
+CarolinaLaCuranderaDeRiverwood class
+	instanceVariableNames: 'frases personajesYSuInformacionPersonal'!
+
+!CarolinaLaCuranderaDeRiverwood class methodsFor: 'interacciones' stamp: 'iv 9/30/2021 00:41:54'!
+interactuarCon: jugadorPersonajeAInteracturar
+	self recordarInteraccionDe: jugadorPersonajeAInteracturar.
+	^ self responderSegunCantidadDeInteraccionesDe: jugadorPersonajeAInteracturar.! !
+
+!CarolinaLaCuranderaDeRiverwood class methodsFor: 'interacciones' stamp: 'iv 9/30/2021 01:29:37'!
+obtenerPersonajesQueInteractuaronConCarolina
+	^personajesYSuInformacionPersonal ! !
+
+!CarolinaLaCuranderaDeRiverwood class methodsFor: 'interacciones' stamp: 'F 10/1/2021 01:07:18'!
+olvidar
+	personajesYSuInformacionPersonal := Dictionary new.! !
+
+
+!CarolinaLaCuranderaDeRiverwood class methodsFor: 'interacciones - privado' stamp: 'F 10/1/2021 01:36:20'!
+agregarInformacionPersonalDelJugadorPersonaje: jugadorPersonajeAInteractuar
+	|informacionDelJugadorPersonaje|
+	"informacionDelJugadorPersonaje  := self InformacionIncial"
+	informacionDelJugadorPersonaje  := Dictionary new.
+	informacionDelJugadorPersonaje at: #opinion put: 'Forastero'.
+	informacionDelJugadorPersonaje at: #cantidadDeInteracciones put: 0.
+	
+	personajesYSuInformacionPersonal at: jugadorPersonajeAInteractuar put: informacionDelJugadorPersonaje.
+	
+	^personajesYSuInformacionPersonal. ! !
+
+!CarolinaLaCuranderaDeRiverwood class methodsFor: 'interacciones - privado' stamp: 'F 10/1/2021 01:19:23'!
+aumentarCantidadDeInteraccionesDe: infoPersonalDelJugadorPersonaje
+	|cantidadDeInteraccionesDelJugadorPersonaje|
+"	(infoPersonalDelJugadorPersonaje at:#cantidadDeInteracciones) > frasesSegunLaOpinionDelPueblo size ifTrue:[
+		self cambiarOpinionSobre: jugadorPersonajeAInteractuar opinion: 'Prometedor'.
+		infoPersonalDelJugadorPersonaje at: #cantidadDeInteracciones put: 1.
+		
+		TreborElGuardiaDeSkyrim cambiarOpinionSobre: jugadorPersonajeAInteractuar opinion: 'Prometedor'.
+		TreborElGuardiaDeSkyrim olvidarInteraccionDe: jugadorPersonajeAInteractuar.
+	]."
+	cantidadDeInteraccionesDelJugadorPersonaje  :=  infoPersonalDelJugadorPersonaje at: #cantidadDeInteracciones.
+	infoPersonalDelJugadorPersonaje at: #cantidadDeInteracciones put: cantidadDeInteraccionesDelJugadorPersonaje  + 1.
+	^ infoPersonalDelJugadorPersonaje.! !
+
+!CarolinaLaCuranderaDeRiverwood class methodsFor: 'interacciones - privado' stamp: 'iv 9/30/2021 01:54:39'!
+cambiarOpinionSobre: personajeJugadorADarleUnaOpinion opinion: opinionDelPueblo
+	|infoPersonalDelJugadorPersonaje|
+	infoPersonalDelJugadorPersonaje := personajesYSuInformacionPersonal at: personajeJugadorADarleUnaOpinion.
+	infoPersonalDelJugadorPersonaje at: #opinion put: opinionDelPueblo.
+	^infoPersonalDelJugadorPersonaje	.! !
+
+!CarolinaLaCuranderaDeRiverwood class methodsFor: 'interacciones - privado' stamp: 'iv 9/30/2021 00:41:54'!
+olvidarInteraccionDe: jugadorPersonaje
+	|informacionPersonalDelJugadorPersonaje|
+	informacionPersonalDelJugadorPersonaje := personajesYSuInformacionPersonal at: jugadorPersonaje.
+	informacionPersonalDelJugadorPersonaje at: #cantidadDeInteracciones put: 0.
+	informacionPersonalDelJugadorPersonaje at: #opinion put: 'Forastero'.! !
+
+!CarolinaLaCuranderaDeRiverwood class methodsFor: 'interacciones - privado' stamp: 'F 10/1/2021 01:36:29'!
+recordarInteraccionDe: jugadorPersonajeAInteractuar
+	"Si no existe, lo agregamos"
+	|infoPersonalDelJugadorPersonaje|
+
+	infoPersonalDelJugadorPersonaje := personajesYSuInformacionPersonal at: jugadorPersonajeAInteractuar ifAbsent: [false].
+	
+	infoPersonalDelJugadorPersonaje  = false ifTrue: 
+	[	
+		self agregarInformacionPersonalDelJugadorPersonaje: jugadorPersonajeAInteractuar.
+	].
+	
+	^ self aumentarCantidadDeInteraccionesDe: (personajesYSuInformacionPersonal at: jugadorPersonajeAInteractuar ).! !
+
+!CarolinaLaCuranderaDeRiverwood class methodsFor: 'interacciones - privado' stamp: 'F 10/1/2021 01:56:14'!
+responderSegunCantidadDeInteraccionesDe: jugadorPersonajeAInteractuar
+	|infoPersonalDelJugadorPersonaje frasesSegunLaOpinionDelPueblo fraseAResponder |
+	
+	infoPersonalDelJugadorPersonaje := personajesYSuInformacionPersonal at: jugadorPersonajeAInteractuar.
+	frasesSegunLaOpinionDelPueblo := frases at: (infoPersonalDelJugadorPersonaje at: #opinion).
+	
+	fraseAResponder := frasesSegunLaOpinionDelPueblo at: ((infoPersonalDelJugadorPersonaje at:#cantidadDeInteracciones) min: frasesSegunLaOpinionDelPueblo size).
+	
+	(infoPersonalDelJugadorPersonaje at:#cantidadDeInteracciones) = frasesSegunLaOpinionDelPueblo size ifTrue:[
+		self cambiarOpinionSobre: jugadorPersonajeAInteractuar opinion: 'Prometedor'.
+		infoPersonalDelJugadorPersonaje at: #cantidadDeInteracciones put: 0.
+		TreborElGuardiaDeSkyrim interactuarCon: jugadorPersonajeAInteractuar.
+		TreborElGuardiaDeSkyrim cambiarOpinionSobre: jugadorPersonajeAInteractuar opinion: 'Prometedor'.
+		TreborElGuardiaDeSkyrim resetearCantidadInteraccionesDe: jugadorPersonajeAInteractuar.
+	].
+	^fraseAResponder.! !
+
+
+!CarolinaLaCuranderaDeRiverwood class methodsFor: 'as yet unclassified' stamp: 'F 10/4/2021 16:55:49'!
+initializeCollaboratorsFromFile
+	"Auto generated method for loading purposes - Do not modify it"
+
+	frases := ((Dictionary new) add: ('Forastero'->#('¿Estás enfermo forastero?' 'Ah, solo quieres conversar' 'Cuando tengas una aflicción, ven a verme' )); add: ('Prometedor'->#('Salud aventurero!!' 'Toma esta pócima que te hará crecer el pelo. Y cuando tengas una aflicción, ven a verme' )); yourself).
+	personajesYSuInformacionPersonal := ((Dictionary new) add: (#Hamilton->((Dictionary new) add: (#cantidadDeInteracciones->0); add: (#opinion->'Prometedor'); yourself)); yourself).! !
+
+
 !classDefinition: #PruebasInteracionesConCarolinaLaCurandera category: 'Ejercicio1-PNJ-Episodio2'!
 DenotativeObject subclass: #PruebasInteracionesConCarolinaLaCurandera
 	instanceVariableNames: ''
@@ -106,7 +214,7 @@ test09CuandoLaCuranderaCambiaLaOpinionDelPuebloSobreElPersonajeAPrometedorReinic
 	
 	Assert that: 'Salud aventurero!!' isEqualTo: (self carolinaLaCurandera interactuarCon: self hamilton)! !
 
-!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'cambio de opiniones' stamp: 'JMB 9/25/2021 12:51:06'!
+!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'cambio de opiniones' stamp: 'iv 10/1/2021 00:38:33'!
 test10CuandoLaCuranderaCambiaLaOpinionDelPuebloSobreElPersonajeAPrometedorReiniciaElHiloDeDialogoDelGuardiaConElPersonaje
 	self olvidarInteraccionesYOpiniones.
 	self treborElGuardia interactuarCon: self hamilton.
@@ -115,41 +223,50 @@ test10CuandoLaCuranderaCambiaLaOpinionDelPuebloSobreElPersonajeAPrometedorReinic
 	self carolinaLaCurandera interactuarCon: self hamilton.	
 	self carolinaLaCurandera interactuarCon: self hamilton.	
 
-	Assert that: 'Bienvenido aventurero!!' isEqualTo: (self treborElGuardia interactuarCon: self hamilton)! !
+	Assert that: (self treborElGuardia interactuarCon: self hamilton) isEqualTo: 'Bienvenido aventurero!!'.! !
 
 
-!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'personajes' stamp: 'JMB 9/25/2021 12:41:48'!
+!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'personajes' stamp: 'iv 9/30/2021 01:07:22'!
 carolinaLaCurandera
-	Assert isTrue: false description: 'Reemplazar esto por la implementación correspondiente'.! !
+	^CarolinaLaCuranderaDeRiverwood! !
 
-!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'personajes' stamp: 'JMB 9/22/2021 00:09:00'!
+!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'personajes' stamp: 'F 10/1/2021 00:48:36'!
 hamilton
-	Assert isTrue: false description: 'Reemplazar esto por la implementación correspondiente'.! !
+	^#Hamilton! !
 
-!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'personajes' stamp: 'JMB 9/22/2021 00:09:16'!
+!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'personajes' stamp: 'F 10/1/2021 00:48:29'!
 tirion
-	Assert isTrue: false description: 'Reemplazar esto por la implementación correspondiente'.! !
+	^#Tirion! !
 
 !PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'personajes' stamp: 'JMB 9/21/2021 20:52:20'!
 treborElGuardia
 	^ TreborElGuardiaDeSkyrim ! !
 
 
-!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'opiniones e interacciones' stamp: 'JMB 9/22/2021 00:09:33'!
+!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'opiniones e interacciones' stamp: 'iv 9/30/2021 01:41:33'!
 esVistoPorElPuebloComoPrometedor: unPersonaje
-	Assert isTrue: false description: 'Reemplazar esto por la implementación correspondiente'.! !
+	|personajesQueIneteractuaronConCarolina opinion|
+	personajesQueIneteractuaronConCarolina := self carolinaLaCurandera obtenerPersonajesQueInteractuaronConCarolina.
+	
+	opinion := (personajesQueIneteractuaronConCarolina at: unPersonaje) at: #opinion.
+	^opinion = 'Prometedor'.
+	
+	
+	! !
 
-!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'opiniones e interacciones' stamp: 'JMB 9/21/2021 21:01:46'!
+!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'opiniones e interacciones' stamp: 'iv 9/30/2021 00:59:54'!
 hacerQueLaCuranderaOlvideSusInteracciones
-	"Implementar cuando sea necesario"! !
+	CarolinaLaCuranderaDeRiverwood  olvidar.! !
 
-!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'opiniones e interacciones' stamp: 'JMB 9/21/2021 21:02:50'!
+!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'opiniones e interacciones' stamp: 'iv 9/30/2021 00:58:34'!
 hacerQueRiverwoodOlvideTodasSusCalificaciones
-	"Implementar cuando sea necesario"! !
+	CarolinaLaCuranderaDeRiverwood  olvidar.! !
 
-!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'opiniones e interacciones' stamp: 'JMB 9/22/2021 00:09:48'!
+!PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'opiniones e interacciones' stamp: 'iv 9/30/2021 01:56:44'!
 hacerQueRiverwoodVeaPrometedorAHamilton
-	Assert isTrue: false description: 'Reemplazar esto por la implementación correspondiente'.! !
+	
+	CarolinaLaCuranderaDeRiverwood agregarInformacionPersonalDelJugadorPersonaje: self hamilton.
+	CarolinaLaCuranderaDeRiverwood cambiarOpinionSobre: self hamilton opinion: 'Prometedor'! !
 
 !PruebasInteracionesConCarolinaLaCurandera class methodsFor: 'opiniones e interacciones' stamp: 'JMB 9/25/2021 12:48:36'!
 olvidarInteraccionesYOpiniones
@@ -293,11 +410,11 @@ hacerQueElGuardiaOlvideSusInteracciones
 hacerQueRiverwoodOlvideTodasSusCalificaciones
 	^TreborElGuardiaDeSkyrim olvidar ! !
 
-!PruebasInteracionesConTreborElGuardia class methodsFor: 'opiniones e interacciones' stamp: 'F 9/30/2021 00:01:47'!
+!PruebasInteracionesConTreborElGuardia class methodsFor: 'opiniones e interacciones' stamp: 'iv 9/30/2021 01:56:16'!
 hacerQueRiverwoodVeaPrometedorAHamilton
 	"Agregamos a Hamilton al diccionarios de personajesYSuInfoPersonal"
 	TreborElGuardiaDeSkyrim agregarInformacionPersonalDelJugadorPersonaje: self hamilton.
-	TreborElGuardiaDeSkyrim opinionDelPuebloDe: self hamilton opinion: 'Prometedor'! !
+	TreborElGuardiaDeSkyrim cambiarOpinionSobre: self hamilton opinion: 'Prometedor'! !
 
 !PruebasInteracionesConTreborElGuardia class methodsFor: 'opiniones e interacciones' stamp: 'JMB 9/25/2021 12:52:12'!
 olvidarInteraccionesYOpiniones
@@ -324,18 +441,18 @@ interactuarCon: jugadorPersonajeAInteracturar
 	self recordarInteraccionDe: jugadorPersonajeAInteracturar.
 	^ self responderSegunCantidadDeInteraccionesDe: jugadorPersonajeAInteracturar.! !
 
-!TreborElGuardiaDeSkyrim class methodsFor: 'interacciones' stamp: 'F 9/29/2021 23:08:54'!
+!TreborElGuardiaDeSkyrim class methodsFor: 'interacciones' stamp: 'F 10/1/2021 01:06:29'!
 olvidar
-	personajesYSuInformacionPersonal keys do: [:jugadorPersonaje | self olvidarInteraccionDe: jugadorPersonaje].! !
+	personajesYSuInformacionPersonal  := Dictionary new.! !
 
 
-!TreborElGuardiaDeSkyrim class methodsFor: 'interacciones - privado' stamp: 'F 9/29/2021 23:42:42'!
+!TreborElGuardiaDeSkyrim class methodsFor: 'interacciones - privado' stamp: 'F 10/1/2021 01:09:14'!
 agregarInformacionPersonalDelJugadorPersonaje: jugadorPersonajeAInteractuar
 	|informacionDelJugadorPersonaje|
 	"informacionDelJugadorPersonaje  := self InformacionIncial"
 	informacionDelJugadorPersonaje  := Dictionary new.
 	informacionDelJugadorPersonaje at: #opinion put: 'Forastero'.
-	informacionDelJugadorPersonaje at: #cantidadDeInteracciones put: 0.
+	informacionDelJugadorPersonaje at: #cantidadDeInteracciones put: 1.
 	
 	personajesYSuInformacionPersonal at: jugadorPersonajeAInteractuar put: informacionDelJugadorPersonaje.
 	
@@ -348,12 +465,20 @@ aumentarCantidadDeInteraccionesDe: infoPersonalDelJugadorPersonaje
 	infoPersonalDelJugadorPersonaje at: #cantidadDeInteracciones put: cantidadDeInteraccionesDelJugadorPersonaje  + 1.
 	^ infoPersonalDelJugadorPersonaje.! !
 
-!TreborElGuardiaDeSkyrim class methodsFor: 'interacciones - privado' stamp: 'F 9/30/2021 00:26:21'!
+!TreborElGuardiaDeSkyrim class methodsFor: 'interacciones - privado' stamp: 'iv 9/30/2021 01:54:57'!
+cambiarOpinionSobre: personajeJugadorADarleUnaOpinion opinion: opinionDelPueblo
+	|infoPersonalDelJugadorPersonaje|
+	infoPersonalDelJugadorPersonaje := personajesYSuInformacionPersonal at: personajeJugadorADarleUnaOpinion.
+	infoPersonalDelJugadorPersonaje at: #opinion put: opinionDelPueblo.
+	^infoPersonalDelJugadorPersonaje	.! !
+
+!TreborElGuardiaDeSkyrim class methodsFor: 'interacciones - privado' stamp: 'F 10/1/2021 01:04:58'!
 olvidarInteraccionDe: jugadorPersonaje
 	|informacionPersonalDelJugadorPersonaje|
-	informacionPersonalDelJugadorPersonaje := personajesYSuInformacionPersonal at: jugadorPersonaje.
+	informacionPersonalDelJugadorPersonaje := Dictionary new.
+	informacionPersonalDelJugadorPersonaje at: #opinion put: 'Forastero'.
 	informacionPersonalDelJugadorPersonaje at: #cantidadDeInteracciones put: 0.
-	informacionPersonalDelJugadorPersonaje at: #opinion put: 'Forastero'.! !
+	personajesYSuInformacionPersonal at: jugadorPersonaje put: informacionPersonalDelJugadorPersonaje.! !
 
 !TreborElGuardiaDeSkyrim class methodsFor: 'interacciones - privado' stamp: 'F 9/30/2021 00:00:07'!
 opinionDelPuebloDe: personajeJugadorADarleUnaOpinion opinion: opinionDelPueblo
@@ -362,12 +487,12 @@ opinionDelPuebloDe: personajeJugadorADarleUnaOpinion opinion: opinionDelPueblo
 	infoPersonalDelJugadorPersonaje at: #opinion put: opinionDelPueblo.
 	^infoPersonalDelJugadorPersonaje	.! !
 
-!TreborElGuardiaDeSkyrim class methodsFor: 'interacciones - privado' stamp: 'F 9/29/2021 23:51:27'!
+!TreborElGuardiaDeSkyrim class methodsFor: 'interacciones - privado' stamp: 'F 10/1/2021 01:17:26'!
 recordarInteraccionDe: jugadorPersonajeAInteractuar
 	"Si no existe, lo agregamos"
 	|infoPersonalDelJugadorPersonaje|
 
-	infoPersonalDelJugadorPersonaje := personajesYSuInformacionPersonal at: jugadorPersonajeAInteractuar ifAbsent: [false].
+	infoPersonalDelJugadorPersonaje := personajesYSuInformacionPersonal at: jugadorPersonajeAInteractuar  ifAbsent: [false].
 	
 	infoPersonalDelJugadorPersonaje  = false ifTrue: 
 	[	
@@ -375,6 +500,11 @@ recordarInteraccionDe: jugadorPersonajeAInteractuar
 	].
 	
 	^ self aumentarCantidadDeInteraccionesDe: infoPersonalDelJugadorPersonaje.! !
+
+!TreborElGuardiaDeSkyrim class methodsFor: 'interacciones - privado' stamp: 'F 10/1/2021 01:29:49'!
+resetearCantidadInteraccionesDe: unPersonajeJugador
+	
+	(personajesYSuInformacionPersonal at: unPersonajeJugador) at: #cantidadDeInteracciones put: 0.! !
 
 !TreborElGuardiaDeSkyrim class methodsFor: 'interacciones - privado' stamp: 'F 9/30/2021 00:23:56'!
 responderSegunCantidadDeInteraccionesDe: jugadorPersonajeAInteractuar
@@ -386,11 +516,12 @@ responderSegunCantidadDeInteraccionesDe: jugadorPersonajeAInteractuar
 	^frasesSegunLaOpinionDelPueblo at: ((infoPersonalDelJugadorPersonaje at:#cantidadDeInteracciones) min: frasesSegunLaOpinionDelPueblo size)! !
 
 
-!TreborElGuardiaDeSkyrim class methodsFor: 'as yet unclassified' stamp: 'F 9/30/2021 00:29:40'!
+!TreborElGuardiaDeSkyrim class methodsFor: 'as yet unclassified' stamp: 'F 10/4/2021 16:55:49'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
 	frases := ((Dictionary new) add: ('Forastero'->#('Hola forastero' '¿Todo bien?' '¿Algún problema?' )); add: ('Prometedor'->#('Bienvenido aventurero!!' 'Espero que tengas una buena estadia en Riverwood' )); yourself).
-	personajesYSuInformacionPersonal := ((Dictionary new) add: (#Hamilton->((Dictionary new) add: (#cantidadDeInteracciones->2); add: (#opinion->'Prometedor'); yourself)); add: (#Tirion->((Dictionary new) add: (#cantidadDeInteracciones->0); add: (#opinion->'Forastero'); yourself)); yourself).! !
+	personajesYSuInformacionPersonal := ((Dictionary new) add: (#Hamilton->((Dictionary new) add: (#cantidadDeInteracciones->0); add: (#opinion->'Prometedor'); yourself)); add: (#Tirion->((Dictionary new) add: (#cantidadDeInteracciones->0); add: (#opinion->'Prometedor'); yourself)); yourself).! !
 
+CarolinaLaCuranderaDeRiverwood initializeAfterFileIn!
 TreborElGuardiaDeSkyrim initializeAfterFileIn!

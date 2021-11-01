@@ -35,7 +35,7 @@ test03PopRemovesElementsFromTheStack
 	
 	self assert: stack isEmpty! !
 
-!OOStackTest methodsFor: 'test' stamp: 'NR 5/13/2020 13:30:09'!
+!OOStackTest methodsFor: 'test' stamp: 'F 10/31/2021 20:56:28'!
 test04PopReturnsLastPushedObject
 
 	| stack pushedObject |
@@ -144,49 +144,57 @@ TestCase subclass: #SentenceFinderByPrefixTest
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
 
+!SentenceFinderByPrefixTest methodsFor: 'as yet unclassified' stamp: 'F 11/1/2021 02:19:30'!
+setUp
+	! !
+
 
 !classDefinition: #OOStack category: 'Stack-Exercise'!
 Object subclass: #OOStack
-	instanceVariableNames: 'stack'
+	instanceVariableNames: 'stack currentStatus'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+!OOStack commentStamp: '<historical>' prior: 0!
+StatusStack subclasses #(EmptyStack NotEmptyStack).
+!
 
-!OOStack methodsFor: 'testing' stamp: 'F 10/29/2021 22:27:25'!
+
+!OOStack methodsFor: 'testing' stamp: 'F 10/31/2021 20:12:41'!
 isEmpty
-	^(stack size) = 0! !
+	^self size = 0.! !
 
 
-!OOStack methodsFor: 'initialization' stamp: 'F 10/29/2021 21:36:42'!
+!OOStack methodsFor: 'initialization' stamp: 'F 10/31/2021 19:50:59'!
 initialize
-	quantityOfItems _ 0.
 	stack _ OrderedCollection new.
+	currentStatus  := EmptyStack new.
 	! !
 
 
-!OOStack methodsFor: 'primitive actions' stamp: 'F 10/29/2021 22:28:46'!
+!OOStack methodsFor: 'primitive actions' stamp: 'F 10/31/2021 22:42:25'!
 pop
 	
-	(self isEmpty) ifTrue: [
-			^self error: self class stackEmptyErrorDescription.
-	].
+	| newCurrentStackStatus |
+	newCurrentStackStatus _ StatusStack subclasses detect: [:status | (status availableToPop: self size)].
+	currentStatus := newCurrentStackStatus new.
+	^ currentStatus popFrom: stack.
+	! !
 
-	^stack removeFirst. ! !
-
-!OOStack methodsFor: 'primitive actions' stamp: 'F 10/29/2021 21:42:00'!
+!OOStack methodsFor: 'primitive actions' stamp: 'F 10/31/2021 19:53:57'!
 push: aString 
-	stack addFirst: aString.! !
+	stack addFirst: aString.
+	currentStatus := NotEmptyStack new.! !
 
 !OOStack methodsFor: 'primitive actions' stamp: 'F 10/29/2021 21:42:14'!
 size
 	^stack size ! !
 
-!OOStack methodsFor: 'primitive actions' stamp: 'F 10/29/2021 22:29:23'!
+!OOStack methodsFor: 'primitive actions' stamp: 'F 10/31/2021 22:42:41'!
 top
-	(self isEmpty) ifTrue: [
-		^self error: self class stackEmptyErrorDescription.
-	].
-	^stack first ! !
+	| newCurrentStackStatus |
+	newCurrentStackStatus _ StatusStack subclasses detect: [:status | (status availableToGetTopStack: self size)].
+	^ newCurrentStackStatus new topFrom: stack.! !
 
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -207,3 +215,81 @@ Object subclass: #SentenceFinderByPrefix
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Stack-Exercise'!
+
+
+!classDefinition: #StatusStack category: 'Stack-Exercise'!
+Object subclass: #StatusStack
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!StatusStack methodsFor: 'as yet unclassified' stamp: 'F 10/31/2021 22:42:25'!
+popFrom: aStack
+	self subclassResponsibility.! !
+
+!StatusStack methodsFor: 'as yet unclassified' stamp: 'F 10/31/2021 22:42:41'!
+topFrom: aStack
+	self subclassResponsibility.! !
+
+
+!classDefinition: #EmptyStack category: 'Stack-Exercise'!
+StatusStack subclass: #EmptyStack
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!EmptyStack methodsFor: 'primitive actions' stamp: 'F 10/31/2021 22:42:25'!
+popFrom: aStack
+	^self error: OOStack stackEmptyErrorDescription.
+! !
+
+!EmptyStack methodsFor: 'primitive actions' stamp: 'F 10/31/2021 22:42:41'!
+topFrom: aStack
+	^self error: OOStack stackEmptyErrorDescription! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'EmptyStack class' category: 'Stack-Exercise'!
+EmptyStack class
+	instanceVariableNames: ''!
+
+!EmptyStack class methodsFor: 'as yet unclassified' stamp: 'F 10/31/2021 20:52:22'!
+availableToGetTopStack: aStackSize
+	^aStackSize = 0! !
+
+!EmptyStack class methodsFor: 'as yet unclassified' stamp: 'F 10/31/2021 20:06:17'!
+availableToPop: aStackSize
+	^aStackSize = 0! !
+
+
+!classDefinition: #NotEmptyStack category: 'Stack-Exercise'!
+StatusStack subclass: #NotEmptyStack
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+!NotEmptyStack methodsFor: 'primitive actions' stamp: 'F 10/31/2021 22:42:25'!
+popFrom: aStack
+	^aStack removeFirst. 
+! !
+
+!NotEmptyStack methodsFor: 'primitive actions' stamp: 'F 10/31/2021 22:42:41'!
+topFrom: aStack
+	^aStack first.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'NotEmptyStack class' category: 'Stack-Exercise'!
+NotEmptyStack class
+	instanceVariableNames: ''!
+
+!NotEmptyStack class methodsFor: 'as yet unclassified' stamp: 'F 10/31/2021 20:52:14'!
+availableToGetTopStack: aStackSize
+	^aStackSize ~= 0! !
+
+!NotEmptyStack class methodsFor: 'as yet unclassified' stamp: 'F 10/31/2021 20:06:31'!
+availableToPop: aStackSize
+	^aStackSize ~= 0! !

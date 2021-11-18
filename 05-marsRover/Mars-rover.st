@@ -5,7 +5,15 @@ TestCase subclass: #MarsRoverTest
 	poolDictionaries: ''
 	category: 'Mars-rover'!
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 05:50:08'!
+!MarsRoverTest methodsFor: 'testing - private' stamp: 'F 11/18/2021 17:27:31'!
+assertWithInstruction: anInstruction expected: aExpectedResult onMessage: aMessage
+	| marsRover |
+	marsRover := MarsRover new.
+	marsRover executeInstructions: anInstruction .
+	self assert: aExpectedResult equals: (aMessage sendTo: marsRover).! !
+
+
+!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 17:25:59'!
 test01WhenTheRoverIsInitalizedWithoutAPositionWillBeInitializedInOrigin
 	| marsRover |
 	marsRover := MarsRover new.
@@ -17,54 +25,33 @@ test02WhenTheRoverIsInitializedWithoutADirectionWillBeFacingNorth
 	marsRover := MarsRover new.
 	self assert: North new equals: marsRover cardinalPoint.! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 05:41:38'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 17:27:10'!
 test03RoverMovedForward
-	| marsRover |
-	marsRover := MarsRover new.
-	marsRover executeInstructions: 'f'.
-	self assert: 0@1 equals: marsRover position.! !
+	self assertWithInstruction: 'f' expected: 0@1 onMessage: #position.! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 05:48:47'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 17:32:00'!
 test04RoverMovedBackwards
-	| marsRover |
-	marsRover := MarsRover new.
-	marsRover executeInstructions: 'b'.
-	self assert: 0@-1 equals: marsRover position.! !
+	self assertWithInstruction: 'b' expected:  0@-1 onMessage: #position.! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 05:48:51'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 17:28:55'!
 test05RoverMovedBackwardsAndForward
-	| marsRover |
-	marsRover := MarsRover new.
-	marsRover executeInstructions: 'fb'.
-	self assert: 0@0 equals: marsRover position.! !
+	self assertWithInstruction: 'bf' expected: 0@0 onMessage: #position.! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 05:48:57'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 17:29:25'!
 test06TurnsLeftAndFacesWest
-	| marsRover |
-	marsRover := MarsRover new.
-	marsRover executeInstructions: 'l'.
-	self assert: West new equals: marsRover cardinalPoint .! !
+	self assertWithInstruction: 'l' expected: West new onMessage: #cardinalPoint.! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 05:49:02'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 17:31:41'!
 test07TurnsRightAndFacesEast
-	| marsRover |
-	marsRover := MarsRover new.
-	marsRover executeInstructions: 'r'.
-	self assert: East new equals: marsRover cardinalPoint .! !
+	self assertWithInstruction: 'r' expected: East new onMessage: #cardinalPoint.! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 05:49:07'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 17:32:39'!
 test08TurnsTwiceRightAndFacesSouth
-	| marsRover |
-	marsRover := MarsRover new.
-	marsRover executeInstructions: 'rr'.
-	self assert: South new equals: marsRover cardinalPoint .! !
+	self assertWithInstruction: 'rr' expected: South new onMessage: #cardinalPoint.! !
 
-!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 05:49:13'!
+!MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 17:32:57'!
 test09TurnsTwiceAndFacesNorth
-	| marsRover |
-	marsRover := MarsRover new.
-	marsRover executeInstructions: 'lr'.
-	self assert: North new equals: marsRover cardinalPoint .! !
+	self assertWithInstruction: 'lr' expected: North new onMessage: #cardinalPoint.! !
 
 !MarsRoverTest methodsFor: 'testing' stamp: 'F 11/18/2021 05:49:19'!
 test10TurnRightAndMoveForward
@@ -321,7 +308,7 @@ Instructions subclass: #InvalidInstruction
 	poolDictionaries: ''
 	category: 'Mars-rover'!
 
-!InvalidInstruction methodsFor: 'as yet unclassified' stamp: 'F 11/18/2021 05:46:50'!
+!InvalidInstruction methodsFor: 'actions' stamp: 'F 11/18/2021 05:46:50'!
 followInstructionWith: aRover
 	^self error: self class errorTheInstructionIsInvalid.! !
 
@@ -420,9 +407,9 @@ executeInstructions: anInstructions
 moveBackward 
 	position _  (self position) + ((self cardinalPoint direction)*(-1))! !
 
-!MarsRover methodsFor: 'actions' stamp: 'F 11/18/2021 05:52:21'!
+!MarsRover methodsFor: 'actions' stamp: 'F 11/18/2021 17:21:38'!
 moveForward 
-	position _  (self position) + ((self cardinalPoint direction))! !
+	position _  (self position) + (self cardinalPoint direction)! !
 
 !MarsRover methodsFor: 'actions' stamp: 'F 11/18/2021 04:08:28'!
 turnLeft
@@ -433,9 +420,9 @@ turnRight
 	self turnToDirection: #rightOfDirection.! !
 
 
-!MarsRover methodsFor: 'actions - private' stamp: 'F 11/18/2021 04:39:55'!
-turnToDirection: aDirection
-	cardinalPoint _ aDirection sendTo: self cardinalPoint.! !
+!MarsRover methodsFor: 'actions - private' stamp: 'F 11/18/2021 17:20:38'!
+turnToDirection: aCardinalPoint
+	cardinalPoint _ aCardinalPoint sendTo: self cardinalPoint.! !
 
 
 !MarsRover methodsFor: 'localization' stamp: 'F 11/18/2021 04:39:55'!
